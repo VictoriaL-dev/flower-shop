@@ -12,8 +12,10 @@
 ```text
 .
 ├── apps/               # Папка для Django-приложений
-│   └── pages/          # Приложение для отображения страниц
+│   ├── bouquets/       # Приложения для букетов (catalog, card)
+│   └── pages/          # Приложение для всех отображения страниц
 ├── flower_shop/        # Настройки проекта (settings, urls, wsgi)
+├── media/              # Media файлы проекта
 ├── static/             # Глобальные статические файлы (CSS, IMG)
 ├── templates/          # Глобальные HTML шаблоны
 ├── docker-compose.dev.yaml
@@ -79,7 +81,7 @@
 3. **Коммит и пуш:**
     ```bash
     git add .
-    git commit -m "Feat: <что сделано>"
+    git commit -m "<что сделано>"
     git push -u origin Feature/<имя-задачи>
     ```
 4. **Завершение:** после вашего Pull Request (merge), удаляйте локальную ветку:
