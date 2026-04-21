@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Flower Shop | Букет{% endblock %}
+
+{% block header %}
+{% include "partials/_header.html" %}
+{% endblock %}
+
+{% block content %}
+<section id="card">
+    <div class="container">
+        <div class="card ficb">
+            <div class="card__block card__block_first">
+                <img src="{{ bouquet.image.url }}" alt="{{ bouquet.title }}" class="card__img">
+            </div>
+            <div class="card__block card__block_sec">
+                <div class="title">{{ bouquet.title }}</div>
+                <div class="card__block_price">{{ bouquet.price | floatformat:0 }} руб</div>
+
+                <div class="card__elems">
+                    <span class="card__elems_intro">Состав</span>
+                    <div class="card__items">
+						<!-- Цветы -->
+                        {% for item in bouquet.bouquetflower_set.all %}
+                            <span class="card_items_intro">{{ item.flower.name }} — {{ item.quantity }} шт.</span>
+                        {% endfor %}
+
+                        <!-- Дополнения -->
+                        {% for item in bouquet.bouquetsupply_set.all %}
+                            <span class="card_items_intro">{{ item.supply.name }} — {{ item.quantity }} шт.</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card__elems">
+                    <span class="card__elems_intro">Размер</span>
+                    <div class="card__items">
+                        <span class="card_items_intro">Высота — {{ bouquet.height }} см</span>
+                        <span class="card_items_intro">Ширина — {{ bouquet.width }} см</span>
+                    </div>
+                </div>
+
+                {% if bouquet.is_available %}
+                    <button class="btn largeBtn card__btn">Заказать букет</button>
+                {% else %}
+                    <button class="btn largeBtn card__btn" disabled style="background: grey; cursor: not-allowed;">Нет в наличии</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% include "partials/_consultation.html" %}
+{% endblock %}
+
+{% block footer %}
+{% include "partials/_footer.html" %}
+{% endblock %}
