@@ -6,8 +6,6 @@ app_name = "pages"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("card/", views.card, name="card"),
-    path("catalog/", views.catalog, name="catalog"),
     path("consultation/", views.consultation, name="consultation"),
     path("order/", views.order, name="order"),
     path("order-step/", views.order_step, name="order-step"),

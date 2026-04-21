@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Flower Shop | Каталог{% endblock %}
+
+{% block header %}
+{% include "partials/_header.html" %}
+{% endblock %}
+
+{% block content %}
+<section id="catalog">
+	<div class="container p100">
+		<div class="catalog">
+			<div class="title">Все букеты</div>
+			<div class="catalog__block">
+				{% include "partials/_bouquets_list.html" %}
+
+				{% if bouquets.count > 6 %}
+					<button id="show-more-btn" class="btn largeBtn catalog__btn">Показать ещё</button>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</section>
+{% include "partials/_consultation.html" %}
+{% endblock %}
+
+{% block footer %}
+{% include "partials/_footer.html" %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById("show-more-btn")?.addEventListener("click", function() {
+        const hiddenBouquets = document.querySelectorAll('.hidden-bouquet');
+
+        for (let i = 0; i < 6 && i < hiddenBouquets.length; i++) {
+            hiddenBouquets[i].classList.remove("hidden-bouquet");
+        }
+
+        if (document.querySelectorAll(".hidden-bouquet").length === 0) {
+            this.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
