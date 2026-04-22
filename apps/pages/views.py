@@ -12,14 +12,6 @@ def consultation(request):
     return render(request, "consultation.html")
 
 
-def order(request):
-    return render(request, "order.html")
-
-
-def order_step(request):
-    return render(request, "order-step.html")
-
-
 def quiz(request):
     return render(request, "quiz.html")
 
