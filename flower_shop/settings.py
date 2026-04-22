@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "apps.pages.apps.PagesConfig",
     "apps.bouquets.apps.BouquetsConfig",
 ]
@@ -94,6 +95,17 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-# Media files
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# MinIO Storage
+STORAGES = {
+    "default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
+AWS_ACCESS_KEY_ID = env.str("MINIO_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = env.str("MINIO_SECRET_KEY")
+AWS_STORAGE_BUCKET_NAME = env.str("MINIO_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = env.str("MINIO_ENDPOINT")
+AWS_S3_USE_SSL = env.bool("MINIO_USE_SSL", default=True)
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_REGION_NAME = "us-east-1"
+AWS_DEFAULT_ACL = None
