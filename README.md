@@ -12,11 +12,11 @@
 ```text
 .
 ├── apps/               # Папка для Django-приложений
-│   ├── bouquets/       # Приложения для букетов (catalog, card)
-│   └── pages/          # Приложение для всех отображения страниц
+│   ├── bouquets/       # Приложение для букетов (catalog, card)
+│   ├── orders/         # Приложение для заказов (order)
+│   └── pages/          # Приложение для отображения страниц
 ├── flower_shop/        # Настройки проекта (settings, urls, wsgi)
-├── media/              # Media файлы проекта
-├── static/             # Глобальные статические файлы (CSS, IMG)
+├── static/             # Глобальные статические файлы (css, img)
 ├── templates/          # Глобальные HTML шаблоны
 ├── docker-compose.dev.yaml
 ├── manage.py
