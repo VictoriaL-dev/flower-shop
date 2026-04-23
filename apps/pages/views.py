@@ -8,10 +8,6 @@ def index(request):
     return render(request, "index.html", {"bouquets": recommended_bouquets})
 
 
-def consultation(request):
-    return render(request, "consultation.html")
-
-
 def quiz(request):
     return render(request, "quiz.html")
 

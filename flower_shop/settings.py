@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "apps.pages.apps.PagesConfig",
     "apps.bouquets.apps.BouquetsConfig",
     "apps.orders.apps.OrdersConfig",
+    "apps.consultations.apps.ConsultationsConfig",
 ]
 
 MIDDLEWARE = [
