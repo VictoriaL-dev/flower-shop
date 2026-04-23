@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "phonenumber_field",
     "apps.pages.apps.PagesConfig",
     "apps.bouquets.apps.BouquetsConfig",
     "apps.orders.apps.OrdersConfig",
