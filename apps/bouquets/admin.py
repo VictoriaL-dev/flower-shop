@@ -1,7 +1,17 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Flower, BouquetFlower, Bouquet, Supply, BouquetSupply
+from .models import (
+    Bouquet,
+    BouquetFlower,
+    BouquetSupply,
+    BouquetTag,
+    Flower,
+    Quiz,
+    QuizAnswer,
+    QuizQuestion,
+    Supply,
+)
 
 
 class BouquetFlowerInline(admin.TabularInline):
@@ -14,6 +24,12 @@ class BouquetSupplyInline(admin.TabularInline):
     extra = 1
 
 
+class QuizAnswerInline(admin.TabularInline):
+    model = QuizAnswer
+    extra = 0
+    filter_horizontal = ["tags"]
+
+
 @admin.register(Bouquet)
 class BouquetAdmin(admin.ModelAdmin):
     list_display = ["get_image", "title", "price", "is_available"]
@@ -22,6 +38,7 @@ class BouquetAdmin(admin.ModelAdmin):
     search_fields = ["title", "description", "flowers__name", "supplies__name"]
     exclude = ["flowers", "supplies"]
     inlines = [BouquetFlowerInline, BouquetSupplyInline]
+    filter_horizontal = ["tags"]
 
     def get_image(self, obj):
         if obj.image:
@@ -29,6 +46,13 @@ class BouquetAdmin(admin.ModelAdmin):
         return "Нет фото"
 
     get_image.short_description = "Превью"
+
+
+@admin.register(BouquetTag)
+class BouquetTagAdmin(admin.ModelAdmin):
+    list_display = ["name", "category"]
+    list_filter = ["category"]
+    search_fields = ["name"]
 
 
 @admin.register(Flower)
@@ -39,3 +63,15 @@ class FlowerAdmin(admin.ModelAdmin):
 @admin.register(Supply)
 class SupplyAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Quiz)
+class QuizAdmin(admin.ModelAdmin):
+    list_display = ["title", "is_active"]
+
+
+@admin.register(QuizQuestion)
+class QuizQuestionAdmin(admin.ModelAdmin):
+    list_display = ["quiz", "step_number", "text"]
+    list_filter = ["quiz"]
+    inlines = [QuizAnswerInline]

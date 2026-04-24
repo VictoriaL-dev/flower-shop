@@ -11,6 +11,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"), encoding="utf-8")
 SECRET_KEY = env.str("SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1","localhost"])
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 
 # Application definition
@@ -22,8 +23,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "storages",
+    "phonenumber_field",
+    "widget_tweaks",
     "apps.pages.apps.PagesConfig",
     "apps.bouquets.apps.BouquetsConfig",
+    "apps.orders.apps.OrdersConfig",
+    "apps.consultations.apps.ConsultationsConfig",
 ]
 
 MIDDLEWARE = [
@@ -50,6 +55,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.consultations.context_processors.consultation_form_processor",
             ],
         },
     },
@@ -109,3 +115,9 @@ AWS_S3_USE_SSL = env.bool("MINIO_USE_SSL", default=True)
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_DEFAULT_ACL = None
+# Media files
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+YOOKASSA_SHOP_ID = env.str("YOOKASSA_SHOP_ID")
+YOOKASSA_SECRET_KEY = env.str("YOOKASSA_SECRET_KEY")

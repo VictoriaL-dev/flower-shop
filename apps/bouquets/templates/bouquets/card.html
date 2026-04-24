@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Flower Shop | Букет{% endblock %}
+{% block title %}Flower Shop | {{ bouquet.title }}{% endblock %}
 
 {% block header %}
 {% include "partials/_header.html" %}
@@ -21,12 +21,12 @@
                 <div class="card__elems">
                     <span class="card__elems_intro">Состав</span>
                     <div class="card__items">
-						<!-- Цветы -->
+						<!-- Flowers -->
                         {% for item in bouquet.bouquetflower_set.all %}
                             <span class="card_items_intro">{{ item.flower.name }} — {{ item.quantity }} шт.</span>
                         {% endfor %}
 
-                        <!-- Дополнения -->
+                        <!-- Supplies -->
                         {% for item in bouquet.bouquetsupply_set.all %}
                             <span class="card_items_intro">{{ item.supply.name }} — {{ item.quantity }} шт.</span>
                         {% endfor %}
@@ -42,7 +42,9 @@
                 </div>
 
                 {% if bouquet.is_available %}
-                    <button class="btn largeBtn card__btn">Заказать букет</button>
+                    <a href="{% url 'orders:make-order' bouquet.id %}" class="invisible-link">
+                        <button class="btn largeBtn card__btn">Заказать букет</button>
+                    </a>
                 {% else %}
                     <button class="btn largeBtn card__btn" disabled style="background: grey; cursor: not-allowed;">Нет в наличии</button>
                 {% endif %}
