@@ -22,9 +22,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "phonenumber_field",
+    "widget_tweaks",
     "apps.pages.apps.PagesConfig",
     "apps.bouquets.apps.BouquetsConfig",
     "apps.orders.apps.OrdersConfig",
+    "apps.consultations.apps.ConsultationsConfig",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.consultations.context_processors.consultation_form_processor",
             ],
         },
     },

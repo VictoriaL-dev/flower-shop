@@ -1,12 +1,41 @@
+{% load widget_tweaks %}
+
 <!-- Consultation -->
 <section id="consultation">
 	<div class="container">
 		<div class="consultation">
 			<div class="title consultation__title">Оставьте заявку на консультацию</div>
-			<form action="#" class="consultation__form">
-				<input type="text" name="fname" class="consultation__form_input" placeholder="Введите Имя" required>
-				<input type="text" name="tel" class="consultation__form_input" placeholder="+ 7 (999) 000 00 00" required>
-				<button type="submit" class="consultation__form_btn">Отправить</button>
+			<form action="{% url 'consultations:consultation-form' %}" method="POST" class="consultation__form">
+				{% csrf_token %}
+
+				{% if messages %}
+					<div id="form-status-message" class="messages-container">
+						{% for message in messages %}
+							<div class="alert alert-{{ message.tags }}">
+								{{ message }}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+
+				<div class="consultation__form_wrapper">
+					<div class="consultation__input_wrapper">
+						{% render_field consultation_form.name class="consultation__form_input" placeholder="Введите имя" %}
+						{% if consultation_form.name.errors %}
+							<span class="consultation__error_wrapper">{{ consultation_form.name.errors.0 }}</span>
+						{% endif %}
+                	</div>
+
+					<div class="consultation__input_wrapper">
+						{% render_field consultation_form.phone class="consultation__form_input" placeholder="+7 (999) 000-00-00" %}
+						{% if consultation_form.phone.errors %}
+							<span class="consultation__error_wrapper">{{ consultation_form.phone.errors.0 }}</span>
+						{% endif %}
+					</div>
+
+					<input type="hidden" name="next" value="{{ request.path }}">
+					<button type="submit" class="consultation__form_btn">Отправить</button>
+				</div>
 			</form>
 		</div>
 	</div>

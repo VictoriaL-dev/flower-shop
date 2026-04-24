@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("apps.pages.urls", namespace="pages")),
     path("bouquets/", include("apps.bouquets.urls", namespace="bouquets")),
     path("orders/", include("apps.orders.urls", namespace="orders")),
+    path("consultations/", include("apps.consultations.urls", namespace="consultations")),
 ]
 
 if settings.DEBUG:

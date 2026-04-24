@@ -9,10 +9,6 @@ def index(request):
     return render(request, "index.html", {"bouquets": recommended_bouquets})
 
 
-def consultation(request):
-    return render(request, "consultation.html")
-
-
 def quiz_step(request, step=1):
     """
     Показывает вопрос квиза на указанном шаге.
