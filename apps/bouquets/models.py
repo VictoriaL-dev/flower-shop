@@ -1,6 +1,35 @@
 from django.db import models
 
 
+class BouquetTag(models.Model):
+    """Теги для категоризации букетов."""
+    TAG_CATEGORIES = [
+        ('event', 'Событие'),
+        ('style', 'Стиль'),
+        ('color', 'Цветовая гамма'),
+        ('budget', 'Бюджет'),
+        ('flower', 'Цветок'),
+        ('other', 'Прочее'),
+    ]
+
+    name = models.CharField(max_length=100, unique=True, verbose_name="Название тега")
+    category = models.CharField(
+        max_length=20,
+        choices=TAG_CATEGORIES,
+        blank=True,
+        null=True,
+        verbose_name="Категория тега"
+    )
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+        ordering = ["category", "name"]
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Flower(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Название цветка")
 
@@ -33,6 +62,7 @@ class Bouquet(models.Model):
     flowers = models.ManyToManyField(Flower, through="BouquetFlower", verbose_name="Состав")
     supplies = models.ManyToManyField(Supply, through="BouquetSupply", verbose_name="Дополнения")
     description = models.TextField(blank=True, verbose_name="Описание")
+    tags = models.ManyToManyField(BouquetTag, blank=True, verbose_name="Теги")
 
     class Meta:
         verbose_name = "Букет"
@@ -66,3 +96,65 @@ class BouquetSupply(models.Model):
 
     def __str__(self):
         return f"{self.supply.name} — {self.quantity} шт."
+    
+
+class Quiz(models.Model):
+    """Квиз."""
+    title = models.CharField(max_length=255, verbose_name="Название квиза")
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
+
+    class Meta:
+        verbose_name = "Квиз"
+        verbose_name_plural = "Квизы"
+
+    def __str__(self):
+        return f"{self.title}"
+    
+
+class QuizQuestion(models.Model):
+    """Один вопрос внутри квиза."""
+    quiz = models.ForeignKey(
+        Quiz,
+        on_delete=models.CASCADE,
+        related_name="questions",
+        verbose_name="Квиз"
+    )
+    text = models.CharField(max_length=500, verbose_name="Текст вопроса")
+    step_number = models.PositiveIntegerField(verbose_name="Номер шага")
+
+    class Meta:
+        verbose_name = "Вопрос квиза"
+        verbose_name_plural = "Вопросы квиза"
+        ordering = ["quiz", "step_number"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["quiz", "step_number"],
+                name="unique_step_per_quiz",
+            )
+        ]
+
+    def __str__(self):
+        return f"[{self.quiz.title}] Шаг {self.step_number}: {self.text[:50]}"
+    
+
+class QuizAnswer(models.Model):
+    """Вариант ответа на вопрос. При выборе добавляет теги пользователю."""
+    question = models.ForeignKey(
+        QuizQuestion,
+        on_delete=models.CASCADE,
+        related_name="answers",
+        verbose_name="Вопрос",
+    )
+    text = models.CharField(max_length=255, verbose_name="Текст ответа")
+    tags = models.ManyToManyField(
+        BouquetTag,
+        blank=True,
+        verbose_name="Теги, добавляемые при выборе",
+    )
+
+    class Meta:
+        verbose_name = "Вариант ответа"
+        verbose_name_plural = "Варианты ответов"
+
+    def __str__(self):
+        return f"{self.question.text[:40]} -> {self.text}"
