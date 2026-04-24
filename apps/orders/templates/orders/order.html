@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Flower Shop | Оформление заказа{% endblock %}
 
@@ -18,11 +19,44 @@
 						{% csrf_token %}
 						{{ form.bouquet }}
 
-						<div class="order__form_block ficb">
-							{{ form.name }}
-							{{ form.phone }}
-							{{ form.address }}
+						{% if messages %}
+							<div class="messages-container">
+								{% for message in messages %}
+									<div class="alert alert-{{ message.tags }}">
+										{{ message }}
+									</div>
+								{% endfor %}
+							</div>
+						{% endif %}
+
+						<div class="order__form_block ficb consultation__form_wrapper">
+							<div class="consultation__input_wrapper">
+								{% render_field form.name class="order__form_input" placeholder="Введите имя" %}
+								{% if form.name.errors %}
+									<span class="consultation__error_wrapper">{{ form.name.errors.0 }}</span>
+								{% endif %}
+							</div>
+
+							<div class="consultation__input_wrapper">
+								{% render_field form.phone class="order__form_input" placeholder="+7 (999) 000-00-00" %}
+								{% if form.phone.errors %}
+									<span class="consultation__error_wrapper">{{ form.phone.errors.0 }}</span>
+								{% endif %}
+							</div>
+
+							<div class="consultation__input_wrapper">
+								{% render_field form.address class="order__form_input" placeholder="Адрес доставки" %}
+								{% if form.address.errors %}
+									<span class="consultation__error_wrapper">{{ form.address.errors.0 }}</span>
+								{% endif %}
+							</div>
 						</div>
+
+<!--						<div class="order__form_block ficb">-->
+<!--							{{ form.name }}-->
+<!--							{{ form.phone }}-->
+<!--							{{ form.address }}-->
+<!--						</div>-->
 
 						<div class="order__form_btns fic">
 							{% for radio in form.delivery_time %}
