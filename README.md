@@ -13,6 +13,7 @@
 .
 ├── apps/               # Папка для Django-приложений
 │   ├── bouquets/       # Приложение для букетов (catalog, card)
+│   ├── consultations/  # Приложение для консультаций
 │   ├── orders/         # Приложение для заказов (order)
 │   └── pages/          # Приложение для отображения страниц
 ├── flower_shop/        # Настройки проекта (settings, urls, wsgi)

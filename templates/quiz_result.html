@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Flower Shop | Результат опроса{% endblock %}
+
+{% block header %}
+{% include "partials/_header.html" %}
+{% endblock %}
+
+{% block content %}
+<section id="result">
+    <div class="container">
+        <div class="result p100">
+
+            {% if bouquets %}
+                {% if bouquets|length == 1 %}
+                <div class="title">Мы подобрали специально для Вас</div>
+                <div class="result__block ficb">
+                    <div class="result__elems">
+                        <div class="card__elems">
+                            <span class="card__elems_intro">Описание:</span>
+                            <div class="card__items">
+                                <p class="card__items_text card__items_text__first">
+                                    {{ bouquets.0.description|linebreaksbr }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card__elems">
+                            <span class="card__elems_intro">Состав:</span>
+                            <div class="card__items">
+                                <p class="card__items_text card__items_text__first">
+                                    {% for bf in bouquets.0.bouquetflower_set.all %}
+                                        {{ bf.flower.name }} {{ bf.quantity }} шт.{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="{{ bouquets.0.image.url }}" alt="{{ bouquets.0.title }}" class="result__block_img">
+                    <div class="result__items">
+                        <div class="title result__items_title">{{ bouquets.0.title }}</div>
+                        <div class="result__items_price">{{ bouquets.0.price }} руб</div>
+                        <a href="{% url 'orders:make-order' bouquets.0.id %}">
+                            <button class="btn result__items_btn" style="min-width: 220px;">Заказать букет</button>
+                        </a>
+                        <hr class="result__items_line" />
+                        <div class="result__items_intro">Хотите что-то более специальное?</div>
+                        <div class="result__items_block">
+                            <a href="{% url 'bouquets:catalog' %}" class="invisible-link">
+                                <button class="btn largeBtn result__items_block__btn">Смотреть всю коллекцию</button>
+                            </a>
+                            <button class="btn largeBtn result__items_block__btn">Заказать консультацию</button>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="title">Мы подобрали для Вас {{ bouquets|length }} букета</div>
+                <div class="bouquet-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 30px;">
+                    {% for b in bouquets %}
+                    <div class="bouquet-card" style="flex: 0 0 280px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div style="width: 100%; height: 280px; overflow: hidden;">
+                            <img src="{{ b.image.url }}" alt="{{ b.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 20px; text-align: center;">
+                            <div class="title" style="font-size: 18px; margin-bottom: 10px;">{{ b.title }}</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #43b02a; margin-bottom: 15px;">{{ b.price }} руб</div>
+                            <a href="{% url 'orders:make-order' b.id %}">
+                                <button class="btn" style="min-width: 180px; padding: 12px 20px;">Заказать букет</button>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="{% url 'pages:quiz_start' %}">
+                        <button class="btn" style="min-width: 180px; padding: 12px 20px; background: transparent; border: 1px solid #43b02a; color: #43b02a;">Пройти заново</button>
+                    </a>
+                </div>
+                {% endif %}
+
+            {% else %}
+            <div class="title">К сожалению, ничего не найдено</div>
+            <p style="text-align: center; margin-top: 20px;">
+                Попробуйте изменить ответы или посмотрите
+                <a href="{% url 'bouquets:catalog' %}">весь каталог</a>.
+            </p>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="{% url 'pages:quiz_start' %}">
+                    <button class="btn" style="min-width: 180px; padding: 12px 20px;">Пройти заново</button>
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+{% if bouquets %}
+{% include "partials/_contacts.html" %}
+{% include "partials/_consultation.html" %}
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+{% include "partials/_footer.html" %}
+{% endblock %}
