@@ -12,9 +12,7 @@ def consult(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Спасибо! Мы скоро с вами свяжемся.")
-            return redirect("/consultations/consult/")
-        else:
-            messages.error(request, "Пожалуйста, проверьте корректность данных.")
+            return redirect("consultations:main-consultation-page")
     else:
         form = ConsultationForm()
 
@@ -25,16 +23,18 @@ def consult(request):
 
 def handle_consultation_request(request):
     """Process applications from _consultation.html."""
-    next_url = request.POST.get("next", "/")
+    next_url = request.POST.get("next")
+
+    if not url_has_allowed_host_and_scheme(url=next_url, allowed_hosts={request.get_host()}):
+        next_url = "/"
 
     if request.method == "POST":
         form = ConsultationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Спасибо! Мы скоро с вами свяжемся.")
+            return redirect(next_url)
         else:
-            messages.error(request, "Пожалуйста, проверьте корректность данных.")
-
-    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
-        next_url = "/"
+            request.session["consultation_form_data"] = request.POST
+            return redirect(next_url)
     return redirect(next_url)
