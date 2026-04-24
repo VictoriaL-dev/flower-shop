@@ -11,28 +11,46 @@
 <section id="quiz">
 	<div class="container">
 		<div class="quiz">
-			<div class="quiz__back ">
-				<a href="#" class="quiz__back_link fic"><img src="{% static 'img/arrow-left.svg' %}" alt="arrow-left" class="arrowLeft">
-				<span class="quiz__back_intro">Назад</span></a>
+			
+			<div class="quiz__back">
+				{% if step > 1 %}
+				<a href="{% url 'pages:quiz_step' step=step|add:'-1' %}" class="quiz__back_link fic">
+				{% else %}
+				<a href="{% url 'pages:quiz_start' %}" class="quiz__back_link fic">
+				{% endif %}
+					<img src="{% static 'img/arrow-left.svg' %}" alt="arrow-left" class="arrowLeft">
+					<span class="quiz__back_intro">Назад</span>
+				</a>
 			</div>
-			<div class="quiz__block">
-				<h1 class="quiz__title">К какому событию нужен букет?</h1>
-				<div class="quiz__elems fic">
-					<button class="quiz__elem">Свадьба</button>
-					<button class="quiz__elem">День рождения</button>
-					<button class="quiz__elem">Без повода</button>
-				</div>
+
+			<div class="quiz_block">
+				<h1 class="quiz__title">{{ question.text }}</h1>
+				<form method="POST">
+					{% csrf_token %}
+					<div class="quiz__elems fic">
+						{% for answer in question.answers.all %}
+						<button type="submit"
+								name="answer"
+								value="{{ answer.id }}"
+								class="quiz__elem">
+							{{ answer.text}}
+						</button>
+						{% endfor %}
+					</div>
+				</form>
+
 				<div class="quiz__progress">
 					<div class="quiz__progress_step">
-						<span class="quiz__progress_num">1</span>
+						<span class="quiz__progress_num">{{ step }}</span>
 						<span class="quiz__progress_in"> шаг из </span>
-						<span class="quiz__progress_num">2</span>
+						<span class="quiz__progress_num">{{ total_steps }}</span>
 					</div>
 					<div class="quiz__progress_line">
-						<div class="quiz__progress_lineActive"></div>
+						<div class="quiz__progress_lineActive" style="width: {{ progress_percent }}%;"></div>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 </section>
