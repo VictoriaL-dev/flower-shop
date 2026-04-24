@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Flower Shop | Оплата успешна{% endblock %}
+
+{% block header %}
+{% include "partials/_header.html" %}
+{% endblock %}
+
+{% block content %}
+<section id="order">
+	<div class="container">
+		<div class="order">
+			<div class="order__block">
+				<div class="order_items">
+					<div class="title">Оплата прошла успешно!</div>
+					{% if order %}
+					<p class="order__form_intro">Заказ №{{ order.id }} успешно оплачен.</p>
+					<p class="order__form_intro">Букет «{{ order.bouquet.title }}» будет доставлен по адресу: {{ order.address }}.</p>
+					{% else %}
+					<p class="order__form_intro">Спасибо за заказ! Информация о доставке отправлена на ваш номер телефона.</p>
+					{% endif %}
+					<div class="order__form_line"></div>
+					<div class="order__form_btns ficb">
+						<a href="{% url 'pages:index' %}" class="btn order__form_pay" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">На главную</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<img src="{% static 'img/orderImg.jpg' %}" alt="orderImg" class="order__img">
+</section>
+{% endblock %}
+
+{% block footer %}
+{% include "partials/_footer.html" %}
+{% endblock %}
