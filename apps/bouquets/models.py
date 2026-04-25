@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -20,6 +21,20 @@ class BouquetTag(models.Model):
         null=True,
         verbose_name="Категория тега"
     )
+    min_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Мин. цена",
+    )
+    max_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Макс. цена",
+    )
 
     class Meta:
         verbose_name = "Тег"
@@ -28,6 +43,12 @@ class BouquetTag(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    def clean(self):
+        if self.category == "budget" and (self.min_price is None or self.max_price is None):
+            raise ValidationError(
+                "Для тегов категории «Бюджет» необходимо указать мин. и макс. цену."
+            )
 
 
 class Flower(models.Model):
