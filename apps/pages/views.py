@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Count
 
 from apps.bouquets.models import Bouquet, Quiz, QuizQuestion, QuizAnswer
 
@@ -59,10 +58,10 @@ def quiz_result(request):
     tag_ids = request.session.get("quiz_tags", [])
 
     if tag_ids:
-        bouquets = Bouquet.objects.filter(
-            tags__id__in=tag_ids
-        ).annotate(matched_tags=Count("tags")).order_by("-matched_tags")
-        bouquets = bouquets.filter(matched_tags__gt=0).distinct()
+        bouquets = Bouquet.objects.all()
+        for tag_id in tag_ids:
+            bouquets = bouquets.filter(tags__id=tag_id)
+        bouquets = bouquets.distinct()
     else:
         bouquets = Bouquet.objects.none()
 

@@ -1,4 +1,5 @@
 import json
+import logging
 import uuid
 
 from django.conf import settings
@@ -13,6 +14,8 @@ from yookassa import Configuration, Payment
 from .forms import OrderForm
 from .models import Order
 from apps.bouquets.models import Bouquet
+
+logger = logging.getLogger(__name__)
 
 Configuration.configure(settings.YOOKASSA_SHOP_ID, settings.YOOKASSA_SECRET_KEY)
 
@@ -53,23 +56,27 @@ def pay_order(request):
         return redirect("pages:index")
 
     idempotence_key = str(uuid.uuid4())
-    payment = Payment.create({
-        "amount": {
-            "value": str(order.price),
-            "currency": "RUB"
-        },
-        "capture": True,
-        "confirmation": {
-            "type": "redirect",
-            "return_url": request.build_absolute_uri(
-                reverse("orders:payment-success")
-            )
-        },
-        "description": f"Заказ №{order.id}",
-        "metadata": {
-            "order_id": order.id
-        }
-    }, idempotence_key)
+    try:
+        payment = Payment.create({
+            "amount": {
+                "value": str(order.price),
+                "currency": "RUB"
+            },
+            "capture": True,
+            "confirmation": {
+                "type": "redirect",
+                "return_url": request.build_absolute_uri(
+                    reverse("orders:payment-success")
+                )
+            },
+            "description": f"Заказ №{order.id}",
+            "metadata": {
+                "order_id": order.id
+            }
+        }, idempotence_key)
+    except Exception:
+        logger.exception("Failed to create payment for order %d", order.id)
+        return redirect("orders:payment-failure")
 
     order.payment_id = payment.id
     order.save()
@@ -88,6 +95,7 @@ def yookassa_webhook(request):
     try:
         order = Order.objects.get(payment_id=payment_id)
     except Order.DoesNotExist:
+        logger.warning("Webhook for unknown payment %s", payment_id)
         return HttpResponse(status=404)
 
     if status == "succeeded":
@@ -96,6 +104,7 @@ def yookassa_webhook(request):
         order.status = Order.Status.CANCELLED
 
     order.save(update_fields=["status"])
+    logger.info("Order %d status changed to %s", order.id, status)
     return HttpResponse(status=200)
 
 

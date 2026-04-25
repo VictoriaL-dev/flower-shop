@@ -121,3 +121,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 YOOKASSA_SHOP_ID = env.str("YOOKASSA_SHOP_ID")
 YOOKASSA_SECRET_KEY = env.str("YOOKASSA_SECRET_KEY")
+
+LOG_FILENAME = env.str("LOG_FILENAME", default="app.log")
+LOG_MAX_BYTES = env.int("LOG_MAX_BYTES", default=10 * 1024 * 1024)
+LOG_BACKUP_COUNT = env.int("LOG_BACKUP_COUNT", default=5)
