@@ -50,7 +50,7 @@ class BouquetAdmin(admin.ModelAdmin):
 
 @admin.register(BouquetTag)
 class BouquetTagAdmin(admin.ModelAdmin):
-    list_display = ["name", "category"]
+    list_display = ["name", "category", "min_price", "max_price"]
     list_filter = ["category"]
     search_fields = ["name"]
 
