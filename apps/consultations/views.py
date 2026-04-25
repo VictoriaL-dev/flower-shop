@@ -1,8 +1,12 @@
+import logging
+
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import ConsultationForm
+
+logger = logging.getLogger(__name__)
 
 
 def consult(request):
@@ -35,6 +39,7 @@ def handle_consultation_request(request):
             messages.success(request, "Спасибо! Мы скоро с вами свяжемся.")
             return redirect(next_url)
         else:
+            logger.warning("Invalid consultation form submitted")
             request.session["consultation_form_data"] = request.POST
             return redirect(next_url)
     return redirect(next_url)
